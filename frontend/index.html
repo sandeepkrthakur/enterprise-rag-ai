@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Enterprise RAG AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f7f9fc 0%,
+                    #eef2ff 50%,
+                    #f8fafc 100%
+                );
+
+            color: #101828;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+            backdrop-filter: blur(18px);
+
+            background:
+                rgba(255, 255, 255, 0.88);
+
+            border-bottom:
+                1px solid rgba(15, 23, 42, 0.08);
+        }
+
+
+        .header-inner {
+
+            max-width: 1180px;
+
+            margin: auto;
+
+            padding: 18px 24px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+        }
+
+
+        .brand-icon {
+
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 15px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            font-size: 24px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 10px 25px rgba(79, 70, 229, 0.28);
+        }
+
+
+        .brand-title {
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.4px;
+        }
+
+
+        .brand-subtitle {
+
+            margin-top: 2px;
+
+            font-size: 13px;
+
+            color: #667085;
+        }
+
+
+        .status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 14px;
+
+            color: #667085;
+
+            white-space: nowrap;
+        }
+
+
+        .status-dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #12b76a;
+
+            box-shadow:
+                0 0 0 5px rgba(18, 183, 106, 0.10);
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .container {
+
+            width: min(1180px, calc(100% - 32px));
+
+            margin: 0 auto;
+
+            padding: 45px 0 70px;
+        }
+
+
+        .hero {
+
+            text-align: center;
+
+            margin-bottom: 34px;
+        }
+
+
+        .hero h1 {
+
+            margin: 0;
+
+            font-size: clamp(30px, 5vw, 48px);
+
+            line-height: 1.08;
+
+            letter-spacing: -1.8px;
+
+            font-weight: 850;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #111827,
+                    #4338ca,
+                    #2563eb
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .hero p {
+
+            max-width: 700px;
+
+            margin: 15px auto 0;
+
+            color: #667085;
+
+            font-size: 16px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           GRID
+        ===================================================== */
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.7fr)
+                minmax(280px, 0.8fr);
+
+            gap: 24px;
+
+            align-items: start;
+        }
+
+
+        .card {
+
+            background:
+                rgba(255, 255, 255, 0.92);
+
+            border:
+                1px solid rgba(15, 23, 42, 0.08);
+
+            border-radius: 24px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 20px 60px rgba(15, 23, 42, 0.07);
+        }
+
+
+        .card + .card {
+            margin-top: 24px;
+        }
+
+
+        .section-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .section-icon {
+
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #eef4ff;
+
+            font-size: 20px;
+        }
+
+
+        .section-title h2 {
+
+            margin: 0;
+
+            font-size: 20px;
+
+            letter-spacing: -0.4px;
+        }
+
+
+        .description {
+
+            margin: 0 0 22px;
+
+            color: #667085;
+
+            line-height: 1.65;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           DROP ZONE
+        ===================================================== */
+
+        .drop-zone {
+
+            border:
+                1.5px dashed #c7d2fe;
+
+            border-radius: 20px;
+
+            min-height: 240px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #f8fbff,
+                    #f5f7ff
+                );
+
+            transition:
+                0.25s ease;
+
+            padding: 25px;
+        }
+
+
+        .drop-zone:hover {
+
+            border-color: #6366f1;
+
+            background: #f8f9ff;
+
+            transform: translateY(-1px);
+        }
+
+
+        .drop-zone.dragging {
+
+            border-color: #4f46e5;
+
+            background: #eef2ff;
+
+            transform: scale(1.01);
+        }
+
+
+        .upload-icon {
+
+            width: 68px;
+
+            height: 68px;
+
+            margin: 0 auto 17px;
+
+            border-radius: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #dbeafe,
+                    #e0e7ff
+                );
+
+            color: #1d4ed8;
+        }
+
+
+        .drop-title {
+
+            font-size: 17px;
+
+            font-weight: 750;
+
+            margin-bottom: 6px;
+        }
+
+
+        .drop-subtitle {
+
+            color: #667085;
+
+            font-size: 14px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .choose-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border: 0;
+
+            border-radius: 12px;
+
+            padding: 11px 20px;
+
+            background: #111827;
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+
+        .choose-btn:hover {
+
+            background: #1f2937;
+
+            transform: translateY(-1px);
+        }
+
+
+        #fileInput {
+            display: none;
+        }
+
+
+        /* =====================================================
+           SELECTED FILE
+        ===================================================== */
+
+        .file-preview {
+
+            display: none;
+
+            margin-top: 16px;
+
+            padding: 14px 16px;
+
+            border:
+                1px solid #e4e7ec;
+
+            border-radius: 15px;
+
+            background: #fafbfc;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+
+        .file-preview.show {
+            display: flex;
+        }
+
+
+        .file-info {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            min-width: 0;
+        }
+
+
+        .pdf-icon {
+
+            width: 36px;
+
+            height: 36px;
+
+            border-radius: 10px;
+
+            background: #fee4e2;
+
+            color: #d92d20;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+        }
+
+
+        .file-name {
+
+            font-size: 14px;
+
+            font-weight: 650;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+
+        .file-size {
+
+            margin-top: 3px;
+
+            font-size: 12px;
+
+            color: #667085;
+        }
+
+
+        .remove-file {
+
+            border: 0;
+
+            background: transparent;
+
+            color: #98a2b3;
+
+            cursor: pointer;
+
+            font-size: 20px;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .primary-btn {
+
+            width: 100%;
+
+            margin-top: 18px;
+
+            min-height: 54px;
+
+            border: 0;
+
+            border-radius: 15px;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    100deg,
+                    #2563eb,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 12px 28px rgba(79, 70, 229, 0.22);
+
+            transition: 0.2s ease;
+        }
+
+
+        .primary-btn:hover {
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 70, 229, 0.28);
+        }
+
+
+        .primary-btn:disabled {
+
+            opacity: 0.55;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =====================================================
+           TEXTAREA
+        ===================================================== */
+
+        .question-box {
+
+            width: 100%;
+
+            min-height: 145px;
+
+            resize: vertical;
+
+            border:
+                1px solid #d0d5dd;
+
+            border-radius: 17px;
+
+            padding: 17px;
+
+            font: inherit;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+
+            color: #101828;
+
+            outline: none;
+
+            transition: 0.2s ease;
+
+            background: white;
+        }
+
+
+        .question-box:focus {
+
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 4px rgba(99, 102, 241, 0.10);
+        }
+
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading {
+
+            display: none;
+
+            align-items: center;
+
+            gap: 10px;
+
+            justify-content: center;
+
+            margin-top: 16px;
+
+            color: #667085;
+
+            font-size: 14px;
+        }
+
+
+        .loading.show {
+            display: flex;
+        }
+
+
+        .spinner {
+
+            width: 18px;
+
+            height: 18px;
+
+            border:
+                2px solid #dbe4ff;
+
+            border-top-color: #4f46e5;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.8s linear infinite;
+        }
+
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* =====================================================
+           ANSWER
+        ===================================================== */
+
+        .answer-section {
+
+            display: none;
+
+            margin-top: 28px;
+        }
+
+
+        .answer-section.show {
+            display: block;
+        }
+
+
+        .answer-box {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #f8fbff,
+                    #f4f7ff
+                );
+
+            border:
+                1px solid #dbe4f0;
+
+            border-radius: 18px;
+
+            padding: 21px;
+
+            color: #344054;
+
+            line-height: 1.8;
+
+            font-size: 15px;
+
+            white-space: pre-wrap;
+        }
+
+
+        /* =====================================================
+           SOURCES
+        ===================================================== */
+
+        .sources {
+
+            margin-top: 22px;
+        }
+
+
+        .sources-title {
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            margin-bottom: 12px;
+        }
+
+
+        .source-item {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 12px;
+
+            padding: 14px 15px;
+
+            border:
+                1px solid #e4e7ec;
+
+            border-radius: 14px;
+
+            background: #fff;
+
+            margin-bottom: 10px;
+        }
+
+
+        .source-left {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            min-width: 0;
+        }
+
+
+        .source-name {
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+
+        .page-badge {
+
+            padding: 7px 10px;
+
+            border-radius: 9px;
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+            font-size: 12px;
+
+            font-weight: 750;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           SYSTEM CARD
+        ===================================================== */
+
+        .system-list {
+
+            margin-top: 20px;
+        }
+
+
+        .system-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 15px 0;
+
+            border-bottom:
+                1px solid #eaecf0;
+
+            font-size: 14px;
+        }
+
+
+        .system-row:last-child {
+            border-bottom: 0;
+        }
+
+
+        .system-label {
+            color: #667085;
+        }
+
+
+        .system-value {
+            font-weight: 750;
+        }
+
+
+        .online {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #039855;
+        }
+
+
+        .online::before {
+
+            content: "";
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #12b76a;
+        }
+
+
+        /* =====================================================
+           CLEAR BUTTON
+        ===================================================== */
+
+        .clear-btn {
+
+            width: 100%;
+
+            margin-top: 18px;
+
+            border:
+                1px solid #d0d5dd;
+
+            background: white;
+
+            color: #344054;
+
+            min-height: 46px;
+
+            border-radius: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .clear-btn:hover {
+
+            background: #f9fafb;
+        }
+
+
+        /* =====================================================
+           ALERTS
+        ===================================================== */
+
+        .alert {
+
+            display: none;
+
+            margin-top: 16px;
+
+            padding: 13px 15px;
+
+            border-radius: 13px;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        .alert.show {
+            display: block;
+        }
+
+
+        .alert.success {
+
+            color: #027a48;
+
+            background: #ecfdf3;
+
+            border:
+                1px solid #abefc6;
+        }
+
+
+        .alert.error {
+
+            color: #b42318;
+
+            background: #fef3f2;
+
+            border:
+                1px solid #fecdca;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            text-align: center;
+
+            padding: 25px 20px 35px;
+
+            color: #98a2b3;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 850px) {
+
+            .grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+
+                width: min(
+                    100% - 22px,
+                    700px
+                );
+
+                padding-top: 30px;
+            }
+
+            .header-inner {
+
+                padding: 14px 16px;
+            }
+
+            .brand-icon {
+
+                width: 42px;
+
+                height: 42px;
+
+                border-radius: 13px;
+            }
+
+            .brand-title {
+                font-size: 17px;
+            }
+
+            .status {
+                font-size: 12px;
+            }
+
+            .card {
+                padding: 20px;
+
+                border-radius: 20px;
+            }
+        }
+
+
+        @media (max-width: 500px) {
+
+            .status {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 31px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .drop-zone {
+                min-height: 210px;
+            }
+
+            .source-item {
+                align-items: flex-start;
+            }
+
+            .page-badge {
+                flex-shrink: 0;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ✦
+            </div>
+
+            <div>
+
+                <div class="brand-title">
+                    Enterprise RAG AI
+                </div>
+
+                <div class="brand-subtitle">
+                    Intelligent document assistant
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="status">
+
+            <span class="status-dot"></span>
+
+            AI System Online
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+
+    <section class="hero">
+
+        <h1>
+            Your documents.
+            Your AI.
+        </h1>
+
+        <p>
+            Upload your knowledge base and ask questions
+            using a private, local Retrieval-Augmented
+            Generation system powered by Ollama.
+        </p>
+
+    </section>
+
+
+
+    <div class="grid">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================== -->
+
+        <div>
+
+
+            <!-- UPLOAD CARD -->
+
+            <section class="card">
+
+                <div class="section-title">
+
+                    <div class="section-icon">
+                        📄
+                    </div>
+
+                    <h2>
+                        Upload Knowledge
+                    </h2>
+
+                </div>
+
+
+                <p class="description">
+
+                    Add a PDF to your knowledge base.
+                    The AI will use its content to answer
+                    your questions.
+
+                </p>
+
+
+                <div
+                    class="drop-zone"
+                    id="dropZone"
+                >
+
+                    <div>
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <div class="drop-title">
+                            Drop your PDF here
+                        </div>
+
+                        <div class="drop-subtitle">
+                            or choose a file from your computer
+                        </div>
+
+                        <button
+                            type="button"
+                            class="choose-btn"
+                            id="chooseBtn"
+                        >
+                            Choose PDF
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept=".pdf,application/pdf"
+                >
+
+
+                <div
+                    class="file-preview"
+                    id="filePreview"
+                >
+
+                    <div class="file-info">
+
+                        <div class="pdf-icon">
+                            📄
+                        </div>
+
+                        <div>
+
+                            <div
+                                class="file-name"
+                                id="fileName"
+                            ></div>
+
+                            <div
+                                class="file-size"
+                                id="fileSize"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="remove-file"
+                        id="removeFile"
+                        type="button"
+                        title="Remove file"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    id="uploadBtn"
+                    disabled
+                >
+                    Upload & Process PDF
+                </button>
+
+
+                <div
+                    class="loading"
+                    id="uploadLoading"
+                >
+
+                    <span class="spinner"></span>
+
+                    Processing your document...
+
+                </div>
+
+
+                <div
+                    class="alert"
+                    id="uploadAlert"
+                ></div>
+
+            </section>
+
+
+
+            <!-- ASK CARD -->
+
+            <section class="card">
+
+                <div class="section-title">
+
+                    <div class="section-icon">
+                        🤖
+                    </div>
+
+                    <h2>
+                        Ask Your Documents
+                    </h2>
+
+                </div>
+
+
+                <p class="description">
+
+                    Ask a question about information
+                    contained in your uploaded documents.
+
+                </p>
+
+
+                <textarea
+                    id="questionInput"
+                    class="question-box"
+                    placeholder="Example: What technical skills does Sandeep have?"
+                ></textarea>
+
+
+                <button
+                    class="primary-btn"
+                    id="askBtn"
+                >
+                    Ask AI
+                </button>
+
+
+                <div
+                    class="loading"
+                    id="askLoading"
+                >
+
+                    <span class="spinner"></span>
+
+                    Searching your documents and generating answer...
+
+                </div>
+
+
+                <div
+                    class="alert"
+                    id="askAlert"
+                ></div>
+
+
+                <!-- ANSWER -->
+
+                <div
+                    class="answer-section"
+                    id="answerSection"
+                >
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            💡
+                        </div>
+
+                        <h2>
+                            Answer
+                        </h2>
+
+                    </div>
+
+
+                    <div
+                        class="answer-box"
+                        id="answerBox"
+                    ></div>
+
+
+                    <div
+                        class="sources"
+                        id="sourcesSection"
+                    >
+
+                        <div class="sources-title">
+                            📚 Sources
+                        </div>
+
+                        <div id="sourcesList"></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <aside>
+
+
+            <section class="card">
+
+                <div class="section-title">
+
+                    <div class="section-icon">
+                        ⚡
+                    </div>
+
+                    <h2>
+                        System
+                    </h2>
+
+                </div>
+
+
+                <div class="system-list">
+
+
+                    <div class="system-row">
+
+                        <span class="system-label">
+                            AI Engine
+                        </span>
+
+                        <span class="system-value">
+                            Ollama
+                        </span>
+
+                    </div>
+
+
+                    <div class="system-row">
+
+                        <span class="system-label">
+                            Model
+                        </span>
+
+                        <span class="system-value">
+                            Llama 3.2
+                        </span>
+
+                    </div>
+
+
+                    <div class="system-row">
+
+                        <span class="system-label">
+                            Retrieval
+                        </span>
+
+                        <span class="system-value">
+                            RAG
+                        </span>
+
+                    </div>
+
+
+                    <div class="system-row">
+
+                        <span class="system-label">
+                            Documents
+                        </span>
+
+                        <span
+                            class="system-value"
+                            id="documentCount"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div class="system-row">
+
+                        <span class="system-label">
+                            Status
+                        </span>
+
+                        <span class="system-value online">
+                            Online
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    class="clear-btn"
+                    id="clearBtn"
+                >
+                    Clear Knowledge Base
+                </button>
+
+            </section>
+
+
+        </aside>
+
+
+    </div>
+
+</main>
+
+
+
+<footer>
+
+    Enterprise RAG AI
+    •
+    FastAPI
+    •
+    LangChain
+    •
+    Ollama
+    •
+    Local RAG
+
+</footer>
+
+
+
+<script>
+
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const dropZone =
+    document.getElementById("dropZone");
+
+const chooseBtn =
+    document.getElementById("chooseBtn");
+
+const uploadBtn =
+    document.getElementById("uploadBtn");
+
+const filePreview =
+    document.getElementById("filePreview");
+
+const fileName =
+    document.getElementById("fileName");
+
+const fileSize =
+    document.getElementById("fileSize");
+
+const removeFile =
+    document.getElementById("removeFile");
+
+const uploadLoading =
+    document.getElementById("uploadLoading");
+
+const uploadAlert =
+    document.getElementById("uploadAlert");
+
+const questionInput =
+    document.getElementById("questionInput");
+
+const askBtn =
+    document.getElementById("askBtn");
+
+const askLoading =
+    document.getElementById("askLoading");
+
+const askAlert =
+    document.getElementById("askAlert");
+
+const answerSection =
+    document.getElementById("answerSection");
+
+const answerBox =
+    document.getElementById("answerBox");
+
+const sourcesList =
+    document.getElementById("sourcesList");
+
+const documentCount =
+    document.getElementById("documentCount");
+
+const clearBtn =
+    document.getElementById("clearBtn");
+
+
+
+let selectedFile = null;
+
+
+
+// ============================================================
+// FORMAT FILE SIZE
+// ============================================================
+
+function formatFileSize(bytes) {
+
+    if (bytes < 1024) {
+
+        return bytes + " B";
+    }
+
+    if (bytes < 1024 * 1024) {
+
+        return (
+            (bytes / 1024).toFixed(1)
+            + " KB"
+        );
+    }
+
+    return (
+        (bytes / (1024 * 1024)).toFixed(1)
+        + " MB"
+    );
+}
+
+
+
+// ============================================================
+// SHOW ALERT
+// ============================================================
+
+function showAlert(element, message, type) {
+
+    element.textContent = message;
+
+    element.className =
+        "alert show " + type;
+}
+
+
+
+// ============================================================
+// HIDE ALERT
+// ============================================================
+
+function hideAlert(element) {
+
+    element.className = "alert";
+
+    element.textContent = "";
+}
+
+
+
+// ============================================================
+// FILE SELECTION
+// ============================================================
+
+function handleFile(file) {
+
+    if (!file) {
+        return;
+    }
+
+
+    if (
+        file.type !== "application/pdf"
+        &&
+        !file.name.toLowerCase().endsWith(".pdf")
+    ) {
+
+        showAlert(
+            uploadAlert,
+            "Please select a PDF file.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    selectedFile = file;
+
+
+    fileName.textContent =
+        file.name;
+
+
+    fileSize.textContent =
+        formatFileSize(file.size);
+
+
+    filePreview.classList.add("show");
+
+    uploadBtn.disabled = false;
+
+    hideAlert(uploadAlert);
+}
+
+
+
+// ============================================================
+// CHOOSE FILE
+// ============================================================
+
+chooseBtn.addEventListener(
+    "click",
+    function(event) {
+
+        event.stopPropagation();
+
+        fileInput.click();
+
+    }
+);
+
+
+dropZone.addEventListener(
+    "click",
+    function() {
+
+        fileInput.click();
+
+    }
+);
+
+
+fileInput.addEventListener(
+    "change",
+    function() {
+
+        if (this.files.length > 0) {
+
+            handleFile(
+                this.files[0]
+            );
+
+        }
+
+    }
+);
+
+
+
+// ============================================================
+// REMOVE FILE
+// ============================================================
+
+removeFile.addEventListener(
+    "click",
+    function() {
+
+        selectedFile = null;
+
+        fileInput.value = "";
+
+        filePreview.classList.remove("show");
+
+        uploadBtn.disabled = true;
+
+        hideAlert(uploadAlert);
+
+    }
+);
+
+
+
+// ============================================================
+// DRAG & DROP
+// ============================================================
+
+dropZone.addEventListener(
+    "dragover",
+    function(event) {
+
+        event.preventDefault();
+
+        dropZone.classList.add("dragging");
+
+    }
+);
+
+
+dropZone.addEventListener(
+    "dragleave",
+    function() {
+
+        dropZone.classList.remove(
+            "dragging"
+        );
+
+    }
+);
+
+
+dropZone.addEventListener(
+    "drop",
+    function(event) {
+
+        event.preventDefault();
+
+        dropZone.classList.remove(
+            "dragging"
+        );
+
+
+        const files =
+            event.dataTransfer.files;
+
+
+        if (files.length > 0) {
+
+            handleFile(files[0]);
+
+        }
+
+    }
+);
+
+
+
+// ============================================================
+// UPLOAD PDF
+// ============================================================
+
+uploadBtn.addEventListener(
+    "click",
+    async function() {
+
+        if (!selectedFile) {
+
+            return;
+        }
+
+
+        uploadBtn.disabled = true;
+
+        uploadLoading.classList.add(
+            "show"
+        );
+
+        hideAlert(uploadAlert);
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "file",
+            selectedFile
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/upload",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.detail ||
+                    "Upload failed."
+                );
+
+            }
+
+
+            showAlert(
+                uploadAlert,
+                `✓ ${data.message} — ${data.pages} pages, ${data.chunks} chunks`,
+                "success"
+            );
+
+
+            await updateStatus();
+
+
+        } catch (error) {
+
+            showAlert(
+                uploadAlert,
+                "Upload failed: " +
+                error.message,
+                "error"
+            );
+
+        } finally {
+
+            uploadLoading.classList.remove(
+                "show"
+            );
+
+            uploadBtn.disabled =
+                !selectedFile;
+
+        }
+
+    }
+);
+
+
+
+// ============================================================
+// ASK AI
+// ============================================================
+
+askBtn.addEventListener(
+    "click",
+    askQuestion
+);
+
+
+questionInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+            &&
+            (event.ctrlKey || event.metaKey)
+        ) {
+
+            event.preventDefault();
+
+            askQuestion();
+
+        }
+
+    }
+);
+
+
+
+async function askQuestion() {
+
+    const question =
+        questionInput.value.trim();
+
+
+    if (!question) {
+
+        showAlert(
+            askAlert,
+            "Please enter a question.",
+            "error"
+        );
+
+        questionInput.focus();
+
+        return;
+    }
+
+
+    askBtn.disabled = true;
+
+    askLoading.classList.add(
+        "show"
+    );
+
+    hideAlert(askAlert);
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/ask",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        question: question,
+                        k: 4
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail ||
+                "AI request failed."
+            );
+
+        }
+
+
+        answerBox.textContent =
+            data.answer;
+
+
+        renderSources(
+            data.sources || []
+        );
+
+
+        answerSection.classList.add(
+            "show"
+        );
+
+
+        answerSection.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+
+
+    } catch (error) {
+
+        answerSection.classList.remove(
+            "show"
+        );
+
+        showAlert(
+            askAlert,
+            "Error: " +
+            error.message,
+            "error"
+        );
+
+    } finally {
+
+        askLoading.classList.remove(
+            "show"
+        );
+
+        askBtn.disabled = false;
+
+    }
+
+}
+
+
+
+// ============================================================
+// RENDER SOURCES
+// ============================================================
+
+function renderSources(sources) {
+
+    sourcesList.innerHTML = "";
+
+
+    if (!sources.length) {
+
+        sourcesList.innerHTML =
+            `<div class="source-item">
+                <span class="source-name">
+                    No source references available.
+                </span>
+            </div>`;
+
+        return;
+    }
+
+
+    sources.forEach(
+        function(source) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "source-item";
+
+
+            item.innerHTML = `
+
+                <div class="source-left">
+
+                    <span>
+                        📄
+                    </span>
+
+                    <span class="source-name">
+                        ${escapeHtml(
+                            source.source
+                        )}
+                    </span>
+
+                </div>
+
+                <span class="page-badge">
+                    Page ${escapeHtml(
+                        String(
+                            source.page_label
+                        )
+                    )}
+                </span>
+
+            `;
+
+
+            sourcesList.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHtml(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value;
+
+    return div.innerHTML;
+}
+
+
+
+// ============================================================
+// UPDATE STATUS
+// ============================================================
+
+async function updateStatus() {
+
+    try {
+
+        const response =
+            await fetch("/status");
+
+
+        const data =
+            await response.json();
+
+
+        documentCount.textContent =
+            data.documents;
+
+    } catch (error) {
+
+        console.error(
+            "Status error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+// ============================================================
+// CLEAR KNOWLEDGE BASE
+// ============================================================
+
+clearBtn.addEventListener(
+    "click",
+    async function() {
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to clear the entire knowledge base?"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/documents",
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.detail ||
+                    "Could not clear documents."
+                );
+
+            }
+
+
+            documentCount.textContent =
+                "0";
+
+
+            answerSection.classList.remove(
+                "show"
+            );
+
+
+            showAlert(
+                uploadAlert,
+                "✓ Knowledge base cleared successfully.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            showAlert(
+                uploadAlert,
+                "Error: " +
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+);
+
+
+
+// ============================================================
+// INITIAL STATUS
+// ============================================================
+
+updateStatus();
+
+</script>
+
+
+</body>
+
+</html>
